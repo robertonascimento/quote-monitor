@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                var response = xhttp.responseText;
+                let quote = JSON.parse(response);
+                document.getElementById('btcQuote').innerText = "R$ " + (Math.round(quote.price*100)/100);
+            }
+            xhttp.open('https://api.foxbit.com.br/rest/v3/markets/quotes?side=buy&base_currency=btc&quote_currency=brl&amount=100',true);
+            xhttp.send();
+        </script>
+        <style>
+            div {
+                float:left;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            
+        </div>
+        <div id="btcQuote"></div>
+    </body>
+</html>
