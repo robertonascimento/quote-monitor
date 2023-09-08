@@ -2,25 +2,44 @@
 <html>
     <head>
         <script>
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                var response = xhttp.responseText;
-                let quote = JSON.parse(response);
-                document.getElementById('btcQuote').innerText = "R$ " + (Math.round(quote.price*100)/100);
+            function pageLoad() {
+                getQuotes();
+                setInterval(() => {
+                    getQuotes();
+                }, 5000);
             }
-            xhttp.open('https://api.foxbit.com.br/rest/v3/markets/quotes?side=buy&base_currency=btc&quote_currency=brl&amount=100',true);
-            xhttp.send();
+            function getQuotes() {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    var response = xhttp.responseText;
+                    let quote = JSON.parse(response);
+                    document.getElementById('btcQuote').innerHTML = "" + formatCurrency(Math.round(quote.price*100)/100) + " @ " + (new Date()).toLocaleTimeString();
+                }
+                xhttp.open('GET','https://api.foxbit.com.br/rest/v3/markets/quotes?side=buy&base_currency=btc&quote_currency=brl&amount=100',true);
+                xhttp.send();
+            }
+            function formatCurrency(amount) 
+            {
+                return amount.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
+            };
         </script>
         <style>
             div {
+                display: flex;
+                position: relative;
                 float:left;
+                padding-left: 10px;
+                margin-top:10px;
             }
         </style>
     </head>
-    <body>
-        <div>
-            
+    <body onload="pageLoad()">
+        <div width="10%" style="min-width: 5%;">
+            <img width="40" height="40" src="images/btc-logo.png">
         </div>
-        <div id="btcQuote"></div>
+        <div id="btcQuote" style="min-width: 90%;"></div>
+        <div>
+            Fonte: FoxBit
+        </div>
     </body>
 </html>
